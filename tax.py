@@ -4,8 +4,16 @@ class taxFormat:
         self.fileGen = gen
 
     def formatGen(self) -> None:
-        for line in self.fileGen:
-            pass #need to learn the formatting
+        try:
+            for line in self.fileGen:
+                if not line.split()[0].isnumeric():
+                    if line.strip() not in self.taxLabels:
+                        self.taxLabels[line.strip()] = []
+                    else:
+                        pass
+        except:
+            pass
+
 
     def printResults(self) -> None:
         for header, money in self.taxLabels.items():
@@ -17,3 +25,10 @@ class taxFormat:
             for header, money in self.taxLabels.items():
                 newFile.write(f'{header}: ${money:,.2f}\n')
         print(f"Done writing to File {fileName}")
+
+
+class duplicateLabel(Exception):
+    def __init__(self):
+        pass
+    def __str__(self):
+        pass
