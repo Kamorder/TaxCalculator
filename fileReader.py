@@ -7,7 +7,7 @@ def inputFile(textStr = '') -> Path:
 
 def openFile(path) -> Generator:
     with open(path) as file:
-        return yieldIter(file.readlines)
+        return yieldIter(file.readlines())
 
 def yieldIter(iterable) -> Generator:
     yield from iterable
