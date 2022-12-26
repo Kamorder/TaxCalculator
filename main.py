@@ -6,3 +6,6 @@ def main():
     taxDoc.formatGen()
     taxDoc.printResults()
     taxDoc.writeInFile()
+
+if __name__ == "__main__":
+    main()
