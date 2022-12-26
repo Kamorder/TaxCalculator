@@ -7,15 +7,17 @@ class taxFormat:
         try:
             currentHeader = ''
             for line in self.fileGen:
-                if not line.split()[0].isnumeric():
-                    if line.strip() not in self.taxHeader:
-                        self.taxHeader[line.strip()] = 0
-                        currentHeader = line.strip()
+                if line.strip():
+                    splitLine = line.split()
+                    if not splitLine[0].replace('.','',1).replace(',', '').isnumeric():
+                        if line.strip() not in self.taxHeader:
+                            self.taxHeader[line.strip()] = 0
+                            currentHeader = line.strip()
+                        else:
+                            raise duplicateLabel(line.strip())
                     else:
-                        raise duplicateLabel(line.strip())
-                else:
-                    if currentHeader:
-                        self.taxHeader[currentHeader] += sum((float(x) for x in line.split()))
+                        if currentHeader:
+                            self.taxHeader[currentHeader] += sum((float(x.replace(',', '')) for x in line.split()))
 
         except duplicateLabel as error:
             print(error)
