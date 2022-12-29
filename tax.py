@@ -31,7 +31,7 @@ class taxFormat:
         with open(fileName, "w") as newFile:
             for header, money in self.taxHeader.items():
                 newFile.write(f'{header}: ${money:,.2f}\n')
-        print(f"Done writing to File {fileName}")
+        print(f"Done writing to file {fileName}")
 
 
 class duplicateLabel(Exception):
