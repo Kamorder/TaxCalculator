@@ -14,7 +14,7 @@ or
 $100 $200 $300
 
 Example:
-Gas
+Gas\n
 100 200 56.40 39.59
 
 This then would print in the final document
