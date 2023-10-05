@@ -1,5 +1,5 @@
 class taxFormat:
-    '''main formatting class'''
+    '''Main formatting class.'''
     def __init__(self, gen):
         self.taxHeader = dict()
         self.fileGen = gen
