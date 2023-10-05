@@ -1,9 +1,12 @@
 class taxFormat:
+    '''main formatting class'''
     def __init__(self, gen):
         self.taxHeader = dict()
         self.fileGen = gen
 
     def formatGen(self) -> None:
+        '''Takes all the lines in a given file and assigns them as a header if they are alphanumeric. 
+        If they are numeric the value is added to the most recent header.'''
         try:
             currentHeader = ''
             for line in self.fileGen:
@@ -23,10 +26,12 @@ class taxFormat:
             print(error)
 
     def printResults(self) -> None:
+        '''Prints the results for the user to see before adding to a txt file.'''
         for header, money in self.taxHeader.items():
             print(f'{header}: ${money:,.2f}')
 
     def writeInFile(self) -> None:
+        '''Writes the header with the money values into a txt file in the format Name: $money.'''
         fileName = input('Please type a file name: ')
         with open(fileName, "w") as newFile:
             for header, money in self.taxHeader.items():
@@ -35,6 +40,7 @@ class taxFormat:
 
 
 class duplicateLabel(Exception):
+    '''Exception if the user uses a duplicate name.'''
     def __init__(self, dupeName):
         self.dupeName = dupeName
 
