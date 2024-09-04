@@ -1,3 +1,4 @@
 #Ignore basic files
 .DS_Store
 env/
+*.CSV
