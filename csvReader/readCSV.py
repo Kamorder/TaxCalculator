@@ -1,6 +1,7 @@
 import csv
 import os
-from csvClass import csvRow
+import re
+from .csvClass import csvRow
 
 resourcePath = os.getcwd() + "/resources"
 
@@ -23,9 +24,11 @@ def getCSVType(infoList, fileName):
     card = fileName.split("_")[0]
     date = infoList[0]
     description = infoList[2]
+    parsed = parseDescription(infoList[2])
     cost = abs(float(infoList[5]))
     
-    return csvRow(card,date,description,cost)
+    return csvRow(card,date,description,parsed,cost)
+
+def parseDescription(info):
+    return re.sub(r'[^a-zA-Z]', '', info).upper()
     
-if __name__ == "__main__":
-    print(collateDocuments())
