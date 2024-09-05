@@ -52,8 +52,9 @@ def writeAllData(taxFile, writeDict):
 def csvGenerator():
     yield from collateDocuments()
     
-
+def startProcess(documentDirectory, documentName):
+    openNewDirectory(documentDirectory)
+    startTaxProcess(Path(documentDirectory), documentName)
 
 if __name__ == "__main__":
-    openNewDirectory("writeTaxes")
-    startTaxProcess(Path("writeTaxes"), datetime.today().strftime('%Y-%m-%d')  + "_tax.txt")
+    startProcess("writeTaxes", datetime.today().strftime('%Y-%m-%d')  + "_tax.txt")
