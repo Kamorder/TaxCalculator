@@ -14,7 +14,7 @@ def collateDocuments():
 
 def openCSVandAddRows(fileName, entryList):
     file = resourcePath + "/" + fileName
-    with open(file) as csvFile:
+    with open(file, mode='r', encoding='ISO-8859-1') as csvFile:
         openedCSV = csv.reader(csvFile)
         next(openedCSV)
         for line in openedCSV:

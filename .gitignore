@@ -3,3 +3,4 @@
 env/
 *.CSV
 __pycache__
+writeTaxes/*
