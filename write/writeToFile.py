@@ -1,5 +1,6 @@
 from datetime import datetime
 from pathlib import Path
+from typing import Generator
 import sys
 import os
 
@@ -10,7 +11,7 @@ def openNewDirectory(directoryName) -> None:
     if not os.path.isdir(directoryName):
         os.mkdir(directoryName)
 
-def startTaxProcess(directory, fileName):
+def startTaxProcess(directory, fileName) -> None:
     currentSpot = 0
     parsedMap = {}
     allCategories = {}
@@ -30,18 +31,22 @@ def startTaxProcess(directory, fileName):
                     parsedMap[item.parsed] = category.lower();
                     allCategories[str(len(allCategories))] = category.lower()
                     print(parsedMap)
+                else:
+                    parsedMap[item.parsed] = "skip"
+        print(f"done, collating data...\n{parsedMap}\n{allCategories}\n")
         writeDict = collatedataintosheet(parsedMap,allCategories)
         writeAllData(taxFile, writeDict)
 
-def collatedataintosheet(parsedMap, allCategories):
+def collatedataintosheet(parsedMap, allCategories) -> dict:
     writeDict = {}
     for value in allCategories.values():
         writeDict[value] = []
     for item in csvGenerator():
-        writeDict[parsedMap[item.parsed]].append(item.cost)
+        if parsedMap[item.parsed] != "skip":
+            writeDict[parsedMap[item.parsed]].append(item.cost)
     return writeDict
 
-def writeAllData(taxFile, writeDict): 
+def writeAllData(taxFile, writeDict) -> None: 
     for key, values in writeDict.items():
         taxFile.write(key.upper() + "\n")
         for value in values:
@@ -49,12 +54,10 @@ def writeAllData(taxFile, writeDict):
         taxFile.write("\n\n")
 
 
-def csvGenerator():
+def csvGenerator() -> Generator:
     yield from collateDocuments()
     
-def startProcess(documentDirectory, documentName):
+def startProcess(documentDirectory, documentName) -> None:
     openNewDirectory(documentDirectory)
     startTaxProcess(Path(documentDirectory), documentName)
 
-if __name__ == "__main__":
-    startProcess("writeTaxes", datetime.today().strftime('%Y-%m-%d')  + "_tax.txt")

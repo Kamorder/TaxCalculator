@@ -1,26 +1,31 @@
 import csv
 import os
 import re
-from .csvClass import csvRow
+from .csvClass import csvRow, csvDebitRow
 
 resourcePath = os.getcwd() + "/resources"
 
-def collateDocuments():
+def collateDocuments() -> list:
     entryList = []
     for _,_,files in os.walk(resourcePath):
         for name in files:
-            openCSVandAddRows(name,entryList)
+            if name.lower().endswith(".csv"):
+                openCSVandAddRows(name,entryList)
     return entryList
 
-def openCSVandAddRows(fileName, entryList):
+def openCSVandAddRows(fileName, entryList) -> None:
     file = resourcePath + "/" + fileName
-    with open(file, mode='r', encoding='ISO-8859-1') as csvFile:
+    with open(file, mode='r') as csvFile:
         openedCSV = csv.reader(csvFile)
-        next(openedCSV)
-        for line in openedCSV:
-            entryList.append(getCSVType(line,fileName))
+        firstLine = next(openedCSV)
+        if firstLine[0].lower() == "details":
+            for line in openedCSV:
+                entryList.append(getCSVTypeDebit(line,fileName))
+        else:
+            for line in openedCSV:
+                 entryList.append(getCSVType(line, fileName))
 
-def getCSVType(infoList, fileName):
+def getCSVType(infoList, fileName) -> csvRow:
     card = fileName.split("_")[0]
     date = infoList[0]
     description = infoList[2]
@@ -29,6 +34,15 @@ def getCSVType(infoList, fileName):
     
     return csvRow(card,date,description,parsed,cost)
 
-def parseDescription(info):
-    return re.sub(r'[^a-zA-Z]', '', info).upper()
+def getCSVTypeDebit(infoList, fileName) -> csvDebitRow:
+    line = fileName.split("_")[0]
+    date = infoList[1]
+    description = infoList[2]
+    parsed = parseDescription(infoList[2])
+    cost = abs(float(infoList[3]))
     
+    return csvDebitRow(line,date,description,parsed,cost)
+
+def parseDescription(info) -> str:
+    return re.sub(r'[^a-zA-Z]', '', info).upper()
+

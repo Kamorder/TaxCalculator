@@ -4,3 +4,4 @@ env/
 *.CSV
 __pycache__
 writeTaxes/*
+2023*
