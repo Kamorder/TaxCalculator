@@ -1,9 +1,11 @@
-from fileReader import inputFile, openFile
-from tax import taxFormat
+from datetime import datetime
+from utils.fileReader import getPath, openFile, inputFile
+from tax.tax import taxFormat
+from write.writeToFile import startProcess
 def main():
-    '''Gets the file, initiates a taxFormat instance,and utilizes the methods to create the formatted Report.'''
     initiateFile = inputFile("Please input the name of the formatted File: ")
-    taxDoc = taxFormat(openFile(initiateFile))
+    startProcess("writeTaxes", datetime.today().strftime('%Y-%m-%d')  + "_tax.txt")
+    taxDoc = taxFormat(openFile(getPath("./writeTaxes/" + datetime.today().strftime('%Y-%m-%d')  + "_tax.txt")))
     taxDoc.formatGen()
     taxDoc.printResults()
     taxDoc.writeInFile()

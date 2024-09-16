@@ -1,0 +1,7 @@
+#Ignore basic files
+.DS_Store
+env/
+*.CSV
+__pycache__
+writeTaxes/*
+2023*
