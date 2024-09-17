@@ -1,10 +1,18 @@
 from datetime import datetime
 from utils.fileReader import getPath, openFile
+from utils.cmdLine import pdataTrue, pdataPath
 from tax.tax import taxFormat
 from write.writeToFile import startProcess
+
 def main():
-    startProcess("writeTaxes", datetime.today().strftime('%Y-%m-%d')  + "_tax.txt")
-    taxDoc = taxFormat(openFile(getPath("./writeTaxes/" + datetime.today().strftime('%Y-%m-%d')  + "_tax.txt")))
+    file = ''
+    if pdataTrue():
+        file = openFile(pdataPath())
+    else:
+        startProcess("writeTaxes", datetime.today().strftime('%Y-%m-%d')  + "_tax.txt")
+        file = openFile(getPath("./writeTaxes/" + datetime.today().strftime('%Y-%m-%d')  + "_tax.txt"))
+    
+    taxDoc = taxFormat(file)
     taxDoc.formatGen()
     taxDoc.printResults()
     taxDoc.writeInFile()
