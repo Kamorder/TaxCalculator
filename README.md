@@ -51,8 +51,10 @@ Gas
 
 100 200 56.40 39.59
 ```
-2. Go to the chase website, login and download a **csv** file format of your credit card statement for the previous year. Then put this in the **resources** folder. Pick all the categories and enter them based on the statements. If duplicate statements exist they are input into the same category. 
-
+2. Go to the chase website, login and download a **csv** file format of your credit card statement for the previous year. Then put this in the **resources** folder. Pick all the categories and enter them based on the statements. If duplicate statements exist they are input into the same category. If you have a category made such as gas you can either type gas again or the number associated with gas(which will be assigned once the category is picked out). An example of what this line can look like is: 
+```
+Card:Chase1329 Date:10/10/2023 Description:BP GAS*1029303248  Cost:10.38
+```
 3. Go to the chase website, login and download a checking account statement as a **csv** for the previous year and put it in the **resources** folder. Pick all categories to put the statements in. 
 ## What is Returned
 With the gas example it would give you the line:
