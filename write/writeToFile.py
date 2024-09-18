@@ -12,6 +12,7 @@ def openNewDirectory(directoryName) -> None:
         os.mkdir(directoryName)
 
 def startTaxProcess(directory, fileName) -> None:
+    '''Start the process using the CSV file format'''
     currentSpot = 0
     parsedMap = {}
     allCategories = {}
@@ -38,6 +39,7 @@ def startTaxProcess(directory, fileName) -> None:
         writeAllData(taxFile, writeDict)
 
 def collatedataintosheet(parsedMap, allCategories) -> dict:
+    '''End process which rewinds and puts all the information into a formatted dictionary'''
     writeDict = {}
     for value in allCategories.values():
         writeDict[value] = []
@@ -47,6 +49,7 @@ def collatedataintosheet(parsedMap, allCategories) -> dict:
     return writeDict
 
 def writeAllData(taxFile, writeDict) -> None: 
+    '''End process which takes a formatted dict and writes a document which which is formatted in the README way'''
     for key, values in writeDict.items():
         taxFile.write(key.upper() + "\n")
         for value in values:

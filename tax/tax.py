@@ -4,6 +4,7 @@ class taxFormat:
         self.fileGen = gen
 
     def formatGen(self) -> None:
+        '''Write a dictionary based on the tax file summarizing total costs'''
         try:
             currentHeader = ''
             for line in self.fileGen:
@@ -27,6 +28,7 @@ class taxFormat:
             print(f'{header}: ${money:,.2f}')
 
     def writeInFile(self) -> None:
+        '''End process which writes everything into the final document'''
         fileName = input('Please type a file name: ')
         with open(fileName, "w") as newFile:
             for header, money in self.taxHeader.items():
