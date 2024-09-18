@@ -62,8 +62,7 @@ Gas: $395.99
 The program will also ask you to name a new document which will give you a **txt** document with the summarized categories. 
 
 ## Future Plans
-
-[ ] Create a UI to use rather than using terminal for taxes
-[ ] Creating a better way to recognize similar statements rather than using regex
-[ ] Give the user the option to create a latex PDF document based on the finalized data
-[ ] Create an intermediate saving feature so you do not need to do everything in one go 
+- [ ] Create a UI to use rather than using terminal for taxes
+- [ ] Creating a better way to recognize similar statements rather than using regex
+- [ ] Give the user the option to create a latex PDF document based on the finalized data
+- [ ] Create an intermediate saving feature so you do not need to do everything in one go 
