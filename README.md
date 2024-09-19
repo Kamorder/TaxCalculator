@@ -10,7 +10,7 @@ If **csv** files are provided all you need to do is run:
 python3 main.py
 ```
 ## Getting Started
-1. Create a manual document using this formating technique. 
+1. The old way of doing this is you get your credit card statements and then have a document open either in word or google. Put the name of the specific category and all the charges. The way of listing the charges are put in the example below. You can put the numbers in the categories you want. When you are done you download the document and copy the path by right clicking then run the command using the first way of running. 
 ```
 "Name(No duplicates allowed and fully numeric names not allowed)"
 For the numeric section under the following formats are acceptable. 
@@ -55,6 +55,7 @@ Gas
 ```
 Card:Chase1329 Date:10/10/2023 Description:BP GAS*1029303248  Cost:10.38
 ```
+A prompt will then appear asking for the specific category you want to put the statement into. After this specific categories with labels will appear which can give you a number to type rather than a category if you want to put statements into the same category.
 3. Go to the chase website, login and download a checking account statement as a **csv** for the previous year and put it in the **resources** folder. Pick all categories to put the statements in. 
 ## What is Returned
 With the gas example it would give you the line:
