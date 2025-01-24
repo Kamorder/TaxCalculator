@@ -1,4 +1,3 @@
-from datetime import datetime
 from pathlib import Path
 from typing import Generator
 import sys
@@ -8,8 +7,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from csvReader.readCSV import collateDocuments
 
 def openNewDirectory(directoryName) -> None:
-    if not os.path.isdir(directoryName):
-        os.mkdir(directoryName)
+    Path.mkdir(Path(directoryName), exist_ok=True)
 
 def startTaxProcess(directory, fileName) -> None:
     '''Start the process using the CSV file format'''
