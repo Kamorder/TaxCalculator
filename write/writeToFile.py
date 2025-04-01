@@ -59,6 +59,5 @@ def csvGenerator() -> Generator:
     yield from collateDocuments()
     
 def startProcess(documentDirectory, documentName) -> None:
-    openNewDirectory(documentDirectory)
     startTaxProcess(Path(documentDirectory), documentName)
 

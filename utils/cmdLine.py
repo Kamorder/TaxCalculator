@@ -1,7 +1,7 @@
 import sys
 
-def pdataTrue():
+def pdataTrue() -> bool:
     return len(sys.argv) > 1
 
-def pdataPath():
+def pdataPath() -> str:
     return sys.argv[1]
