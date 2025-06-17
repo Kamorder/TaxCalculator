@@ -1,11 +1,12 @@
 import csv
 import os
 import re
-from .csvClass import csvRow, csvDebitRow
+from csvClass import csvRow, csvDebitRow
+
 
 resourcePath = os.getcwd() + "/resources"
 
-def collateDocuments() -> list:
+def collateDocuments() -> list[csvRow | csvDebitRow]:
     '''Take all CSV documents and put them into the entry list'''
     entryList = []
     for _,_,files in os.walk(resourcePath):
@@ -14,7 +15,7 @@ def collateDocuments() -> list:
                 openCSVandAddRows(name,entryList)
     return entryList
 
-def openCSVandAddRows(fileName : str, entryList : list[csvRow]) -> None:
+def openCSVandAddRows(fileName : str, entryList : list[csvRow | csvDebitRow]) -> None:
     '''Reformat the lines in either the CSV DEBIT or CREDIT'''
     file = resourcePath + "/" + fileName
     with open(file, mode='r') as csvFile:

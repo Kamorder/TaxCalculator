@@ -1,15 +1,13 @@
 from pathlib import Path
 from typing import Generator
-import sys
-import os
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from typing import IO
 from csvReader.readCSV import collateDocuments
+from csvReader.csvClass import csvRow
 
-def openNewDirectory(directoryName) -> None:
-    Path.mkdir(Path(directoryName), exist_ok=True)
+def openNewDirectory(directoryName : Path) -> None:
+    Path.mkdir(directoryName, exist_ok=True)
 
-def startTaxProcess(directory, fileName) -> None:
+def startTaxProcess(directory : Path, fileName : str) -> None:
     '''Start the process using the CSV file format'''
     currentSpot = 0
     parsedMap = {}
@@ -36,7 +34,7 @@ def startTaxProcess(directory, fileName) -> None:
         writeDict = collatedataintosheet(parsedMap,allCategories)
         writeAllData(taxFile, writeDict)
 
-def collatedataintosheet(parsedMap, allCategories) -> dict:
+def collatedataintosheet(parsedMap: dict[str:csvRow], allCategories: dict[str:str]) -> dict:
     '''End process which rewinds and puts all the information into a formatted dictionary'''
     writeDict = {}
     for value in allCategories.values():
@@ -46,7 +44,7 @@ def collatedataintosheet(parsedMap, allCategories) -> dict:
             writeDict[parsedMap[item.parsed]].append(item.cost)
     return writeDict
 
-def writeAllData(taxFile, writeDict) -> None: 
+def writeAllData(taxFile: IO, writeDict: dict[str:str]) -> None: 
     '''End process which takes a formatted dict and writes a document which which is formatted in the README way'''
     for key, values in writeDict.items():
         taxFile.write(key.upper() + "\n")
@@ -57,7 +55,3 @@ def writeAllData(taxFile, writeDict) -> None:
 
 def csvGenerator() -> Generator:
     yield from collateDocuments()
-    
-def startProcess(documentDirectory, documentName) -> None:
-    startTaxProcess(Path(documentDirectory), documentName)
-

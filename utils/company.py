@@ -1,4 +1,3 @@
-import sys
 import os
 import shutil
 
@@ -6,15 +5,14 @@ from typing import Generator
 from datetime import datetime
 from pathlib import Path
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from write.writeToFile import openNewDirectory, startProcess
+from write.writeToFile import startTaxProcess, openNewDirectory
 from utils.cmdLine import pdataTrue, pdataPath
 from utils.fileReader import openFile, getPath
 
 
 
 class companyFolder: 
-    def __init__(self,name:str):
+    def __init__(self, name: str):
         self.companyName = f"{datetime.now().year - 1} taxes {name}" 
         self.companyPath = getPath(self.companyName)
         self.parsedPath = None
@@ -40,7 +38,7 @@ class companyFolder:
             self.moveToRaw(file)
             
 
-    def moveToRaw(self, filePath : Path) -> str:
+    def moveToRaw(self, filePath: Path) -> str:
         '''Moves a file into the raw directory'''
         return shutil.move(filePath, self.companyPath/"raw")
 
@@ -49,11 +47,12 @@ class companyFolder:
         if self.ifParsed:
             file = openFile(self.parsedPath)
         else:
-            startProcess(self.companyPath/"raw", datetime.today().strftime('%Y-%m-%d')  + "_tax.txt")
+            
+            startTaxProcess(self.companyPath/"raw", datetime.today().strftime('%Y-%m-%d')  + "_tax.txt")
             file = openFile(getPath(self.companyPath/"raw"/f"{datetime.today().strftime('%Y-%m-%d')}_tax.txt"))
         return file
 
 if __name__ == "__main__":
     name = "testcompanyfolder"
-    shutil.rmtree(name)
+    #shutil.rmtree(name)
     companyFolder(name)

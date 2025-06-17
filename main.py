@@ -5,17 +5,14 @@ from datetime import datetime
 
 
 def main():
+    ''' Structurizes the tax document by creating a company directory, collating all the csv files into one, 
+    applying labels to the data, summing all the data with the same labels, then outputting a document filled with 
+    the summarized categories.'''
     companyName = inputFile("Enter folder name for company directory:")
     company = companyFolder(companyName)
-    file = company.getProcessingFile()
-    
-    taxDoc = taxFormat(file)
+    taxDoc = taxFormat(company.getProcessingFile())
     taxDoc.formatGen()
     taxDoc.printResults()
-    '''TODO: Find out how you want to store the new file data, currently really sloppy so need to find a new way, 
-    Current thinking... delete writeTaxes folder and instead create a companywide directory under a new folder then have a subfolder 
-    with these documents, also store the data from these folders using pickle...
-     '''
     taxDoc.writeInFile(company.companyPath/"polished"/f"{datetime.today().strftime('%Y-%m-%d')}_itemizedtax.txt")
 
 if __name__ == "__main__":

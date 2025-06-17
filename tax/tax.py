@@ -1,3 +1,5 @@
+from pathlib import Path
+
 class taxFormat:
     def __init__(self, gen):
         self.taxHeader = dict()
@@ -24,10 +26,11 @@ class taxFormat:
             print(error)
 
     def printResults(self) -> None:
+        '''Prints the results for the '''
         for header, money in self.taxHeader.items():
             print(f'{header}: ${money:,.2f}')
 
-    def writeInFile(self, path) -> None:
+    def writeInFile(self, path : Path) -> None:
         '''End process which writes everything into the final document'''
         with open(path, "w") as newFile:
             for header, money in self.taxHeader.items():
