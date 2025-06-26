@@ -67,5 +67,5 @@ The program will also ask you to name a new document which will give you a **txt
 - [ ] Create a UI to use rather than using terminal for taxes
 - [ ] Creating a better way to recognize similar statements rather than using simple regex
 - [ ] Give the user the option to create a latex PDF document based on the finalized data
-- [ ] Create an intermediate saving feature so you do not need to do everything in one go 
+- [X] Create an intermediate saving feature so you do not need to do everything in one go 
 - [ ] Better error handling
