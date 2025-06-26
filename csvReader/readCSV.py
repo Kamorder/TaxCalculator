@@ -1,7 +1,7 @@
 import csv
 import os
 import re
-from csvClass import csvRow, csvDebitRow
+from .csvClass import csvRow, csvDebitRow
 
 
 resourcePath = os.getcwd() + "/resources"

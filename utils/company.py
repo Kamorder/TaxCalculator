@@ -46,9 +46,8 @@ class companyFolder:
         '''Gives the user the processed file'''
         if self.ifParsed:
             file = openFile(self.parsedPath)
-        else:
-            
-            startTaxProcess(self.companyPath/"raw", datetime.today().strftime('%Y-%m-%d')  + "_tax.txt")
+        else:  
+            startTaxProcess(self.companyPath, "raw/" + datetime.today().strftime('%Y-%m-%d')  + "_tax.txt")
             file = openFile(getPath(self.companyPath/"raw"/f"{datetime.today().strftime('%Y-%m-%d')}_tax.txt"))
         return file
 

@@ -5,7 +5,7 @@ from typing import Generator, Iterable
 def inputFile(textStr: str = '') -> Path:
     return Path(input(textStr))
 
-def getPath(input: str):
+def getPath(input: str) -> Path:
     return Path(input)
 
 def openFile(path: Path) -> Generator:

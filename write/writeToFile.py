@@ -1,3 +1,5 @@
+import pickle
+
 from pathlib import Path
 from typing import Generator
 from typing import IO
@@ -9,27 +11,32 @@ def openNewDirectory(directoryName : Path) -> None:
 
 def startTaxProcess(directory : Path, fileName : str) -> None:
     '''Start the process using the CSV file format'''
-    currentSpot = 0
-    parsedMap = {}
-    allCategories = {}
+    partialDirectory = directory/"packaged"
+    parsedMap = loadOrDefault(partialDirectory, "parsedMap", {})
+    allCategories = loadOrDefault(partialDirectory, "allCategories", {})
+
     with open(directory/fileName, 'w') as taxFile:
-        for item in csvGenerator():
-            print(f"Current item:\n{item}")
-            currentSpot += 1
-            if item.parsed in parsedMap:
-                #TODO ADD rest
-                print("skip")
-            else:
-                print(f"\n{allCategories}")
-                category = input("respective category: ")
-                if category in allCategories: 
-                    parsedMap[item.parsed] = allCategories[category]
-                elif category != "skip":
-                    parsedMap[item.parsed] = category.lower();
-                    allCategories[str(len(allCategories))] = category.lower()
-                    print(parsedMap)
+        try:
+            for item in csvGenerator():
+                print(f"Current item:\n{item}")
+                if item.parsed in parsedMap:
+                    #TODO ADD rest
+                    print("skip")
                 else:
-                    parsedMap[item.parsed] = "skip"
+                    print(f"\n{allCategories}")
+                    category = input("respective category: ")
+                    if category in allCategories: 
+                        parsedMap[item.parsed] = allCategories[category]
+                    elif category != "skip":
+                        parsedMap[item.parsed] = category.lower();
+                        allCategories[str(len(allCategories))] = category.lower()
+                        print(parsedMap)
+                    else:
+                        parsedMap[item.parsed] = "skip"
+        finally:
+            save(parsedMap,partialDirectory/"parsedMap")
+            save(allCategories,partialDirectory/"allCategories")
+
         print(f"done, collating data...\n{parsedMap}\n{allCategories}\n")
         writeDict = collatedataintosheet(parsedMap,allCategories)
         writeAllData(taxFile, writeDict)
@@ -43,6 +50,24 @@ def collatedataintosheet(parsedMap: dict[str:csvRow], allCategories: dict[str:st
         if parsedMap[item.parsed] != "skip":
             writeDict[parsedMap[item.parsed]].append(item.cost)
     return writeDict
+
+def loadOrDefault(partialDir: Path, name: str, default: any) -> any:
+    '''Loads a pkl file or picks a default'''
+    path = partialDir/name
+    return load(path) if (path.with_suffix(".pkl")).exists() else default
+
+def save(object : any, objectFile : Path) -> None:
+    '''pkl an object and ensure it keeps the pkl file extension'''
+    objectFile = objectFile.with_suffix(".pkl")
+    with open(objectFile, mode="wb") as writeFile:
+        pickle.dump(object, writeFile)
+
+def load(objectFile: Path) -> any:
+    '''Loads the object'''
+    objectFile = objectFile.with_suffix(".pkl")
+    with open(objectFile, mode="rb") as file:
+        object = pickle.load(file)
+    return object
 
 def writeAllData(taxFile: IO, writeDict: dict[str:str]) -> None: 
     '''End process which takes a formatted dict and writes a document which which is formatted in the README way'''
