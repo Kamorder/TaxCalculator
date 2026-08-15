@@ -34,7 +34,7 @@ class companyFolder:
         if self.ifParsed:
             self.parsedPath = self.moveToRaw(getPath(pdataPath()))
 
-        for file in Path("resources").rglob("*.CSV"): 
+        for file in Path("resources").rglob("*.[cC][sS][vV]"): 
             self.moveToRaw(file)
             
 
@@ -45,7 +45,7 @@ class companyFolder:
     def getProcessingFile(self) -> Generator:
         '''Gives the user the processed file'''
         if self.ifParsed:
-            file = openFile(self.parsedPath)
+            file = openFile(self.parsedPath or getPath(pdataPath()))
         else:  
             startTaxProcess(self.companyPath, "raw/" + datetime.today().strftime('%Y-%m-%d')  + "_tax.txt")
             file = openFile(getPath(self.companyPath/"raw"/f"{datetime.today().strftime('%Y-%m-%d')}_tax.txt"))

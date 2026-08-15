@@ -1,4 +1,6 @@
+import os
 import pickle
+import time
 
 from pathlib import Path
 from typing import Generator
@@ -16,57 +18,66 @@ def startTaxProcess(directory: Path, fileName: str) -> None:
     allCategories = loadOrDefault(partialDirectory, "allCategories", {})
     prev5 = loadOrDefault(partialDirectory, "prev5", [])
 
-    with open(directory/fileName, 'w') as taxFile:
-        try:
-            for item in csvGenerator():
-                print(f"Current item:\n{item}")
-                if item.parsed in parsedMap:
-                    #TODO ADD rest
-                    print("skip")
-                else:
-                    print(f"\n{allCategories}")
+    try:
+        for item in csvGenerator(directory):
+            print(f"Current item:\n{item}")
+            if item.parsed in parsedMap:
+                #TODO ADD rest
+                print("skip")
+            else:
+                print(f"\n{allCategories}")
+                category = input("respective category: ")
+                while category.strip() == "edit previous":
+                    edit = input(f"{[x.description for x in prev5]}, which would you like to edit? Press 1-5 or press enter to skip:\n")
+                    if edit.isnumeric() and 0 < int(edit) <= len(prev5):
+                        edit = prev5[int(edit) - 1] 
+                        response = input(f"select new category for {edit}")
+                        parsedMap[edit.parsed] = response.lower()
+                        allCategories[str(len(allCategories))] = response.lower() 
+                    print(f"Current item:\n{item}")
                     category = input("respective category: ")
-                    while category.strip() == "edit previous":
-                        edit = input(f"{[x.description for x in prev5]}, which would you like to edit? Press 1-5 or press enter to skip:\n")
-                        if edit.isnumeric() and 0 < int(edit) <= len(prev5):
-                            edit = prev5[int(edit) - 1] 
-                            response = input(f"select new category for {edit}")
-                            parsedMap[edit.parsed] = response.lower()
-                            allCategories[str(len(allCategories))] = response.lower() 
-                        print(f"Current item:\n{item}")
-                        category = input("respective category: ")
-                    addPrev(prev5, item)
-                    if category in allCategories: 
-                        parsedMap[item.parsed] = allCategories[category]
-                    elif category.strip() != "skip":
-                        parsedMap[item.parsed] = category.lower();
-                        allCategories[str(len(allCategories))] = category.lower()
-                        print(parsedMap)
-                    else:
-                        parsedMap[item.parsed] = "skip"
-        finally:
-            save(parsedMap,partialDirectory/"parsedMap")
-            save(allCategories,partialDirectory/"allCategories")
-            save(prev5, partialDirectory/"prev5")
+                addPrev(prev5, item)
+                if category in allCategories: 
+                    parsedMap[item.parsed] = allCategories[category]
+                elif category.strip() != "skip":
+                    parsedMap[item.parsed] = category.lower();
+                    allCategories[str(len(allCategories))] = category.lower()
+                    print(parsedMap)
+                else:
+                    parsedMap[item.parsed] = "skip"
+    finally:
+        save(parsedMap,partialDirectory/"parsedMap")
+        save(allCategories,partialDirectory/"allCategories")
+        save(prev5, partialDirectory/"prev5")
 
-        print(f"done, collating data...\n{parsedMap}\n{allCategories}\n")
-        writeDict = collatedataintosheet(parsedMap,allCategories)
+    print(f"done, collating data...\n{parsedMap}\n{allCategories}\n")
+    writeDict = collatedataintosheet(parsedMap,allCategories)
+    with open(directory/fileName, 'w') as taxFile:
         writeAllData(taxFile, writeDict)
 
 def collatedataintosheet(parsedMap: dict[str:csvRow], allCategories: dict[str:str]) -> dict:
     '''End process which rewinds and puts all the information into a formatted dictionary'''
     writeDict = {}
     for value in allCategories.values():
-        writeDict[value] = []
+        if value:
+            writeDict[value] = []
     for item in csvGenerator():
-        if parsedMap[item.parsed] != "skip":
-            writeDict[parsedMap[item.parsed]].append(item.cost)
+        category = parsedMap[item.parsed]
+        if category != "skip":
+            writeDict.setdefault(category, []).append(item.cost)
     return writeDict
 
 def loadOrDefault(partialDir: Path, name: str, default: any) -> any:
-    '''Loads a pkl file or picks a default'''
+    '''Loads a pkl file or picks a default. Corrupt pickles are quarantined.'''
     path = partialDir/name
-    return load(path) if (path.with_suffix(".pkl")).exists() else default
+    pklPath = path.with_suffix(".pkl")
+    if not pklPath.exists():
+        return default
+    try:
+        return load(path)
+    except (pickle.UnpicklingError, EOFError, AttributeError, ImportError):
+        pklPath.rename(pklPath.with_suffix(f".pkl.corrupt-{int(time.time())}"))
+        return default
 
 def addPrev(prev5: list[None|str], obj: str) -> None:
     """Manages the previous 5 objects"""
@@ -75,10 +86,12 @@ def addPrev(prev5: list[None|str], obj: str) -> None:
         prev5.pop()
 
 def save(object: any, objectFile: Path) -> None:
-    '''Pkl an object and ensure it keeps the pkl file extension'''
+    '''Atomically pkl an object: write to .tmp, then os.replace.'''
     objectFile = objectFile.with_suffix(".pkl")
-    with open(objectFile, mode="wb") as writeFile:
+    tmpFile = objectFile.with_suffix(".pkl.tmp")
+    with open(tmpFile, mode="wb") as writeFile:
         pickle.dump(object, writeFile)
+    os.replace(tmpFile, objectFile)
 
 def load(objectFile: Path) -> any:
     '''Loads the object'''
@@ -96,5 +109,8 @@ def writeAllData(taxFile: IO, writeDict: dict[str:str]) -> None:
         taxFile.write("\n\n")
 
 
-def csvGenerator() -> Generator:
-    yield from collateDocuments()
+def csvGenerator(directory = None) -> Generator:
+    if directory is not None: 
+        yield from collateDocuments(directory/"raw")
+    else:
+        yield from collateDocuments()
