@@ -1,7 +1,17 @@
 #Ignore basic files
 .DS_Store
 env/
-*.CSV
+*.csv
 __pycache__
-writeTaxes/*
-2023*
+* taxes *
+
+# Tooling / editor / local state
+.coverage
+.vscode/
+.claude/
+*.pkl
+*.pkl.tmp
+*.pkl.corrupt-*
+
+
+

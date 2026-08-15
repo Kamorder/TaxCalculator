@@ -1,3 +1,5 @@
+from pathlib import Path
+
 class taxFormat:
     def __init__(self, gen):
         self.taxHeader = dict()
@@ -24,16 +26,16 @@ class taxFormat:
             print(error)
 
     def printResults(self) -> None:
+        '''Prints the results for the '''
         for header, money in self.taxHeader.items():
             print(f'{header}: ${money:,.2f}')
 
-    def writeInFile(self) -> None:
+    def writeInFile(self, path : Path) -> None:
         '''End process which writes everything into the final document'''
-        fileName = input('Please type a file name: ')
-        with open(fileName, "w") as newFile:
+        with open(path, "w") as newFile:
             for header, money in self.taxHeader.items():
                 newFile.write(f'{header}: ${money:,.2f}\n')
-        print(f"Done writing to file {fileName}")
+        print(f"Done writing to {path}")
 
 
 class duplicateLabel(Exception):

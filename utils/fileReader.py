@@ -1,16 +1,16 @@
 from pathlib import Path
-from typing import Generator
+from typing import Generator, Iterable
 
 
-def inputFile(textStr = '') -> Path:
+def inputFile(textStr: str = '') -> Path:
     return Path(input(textStr))
 
-def getPath(input):
+def getPath(input: str) -> Path:
     return Path(input)
 
-def openFile(path) -> Generator:
+def openFile(path: Path) -> Generator:
     with open(path) as file:
         return yieldIter(file.readlines())
 
-def yieldIter(iterable) -> Generator:
+def yieldIter(iterable: Iterable) -> Generator:
     yield from iterable

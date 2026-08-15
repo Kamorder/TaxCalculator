@@ -1,21 +1,19 @@
-from datetime import datetime
-from utils.fileReader import getPath, openFile
-from utils.cmdLine import pdataTrue, pdataPath
+from utils.fileReader import inputFile
+from utils.company import companyFolder
 from tax.tax import taxFormat
-from write.writeToFile import startProcess
+from datetime import datetime
+
 
 def main():
-    file = ''
-    if pdataTrue():
-        file = openFile(pdataPath())
-    else:
-        startProcess("writeTaxes", datetime.today().strftime('%Y-%m-%d')  + "_tax.txt")
-        file = openFile(getPath("./writeTaxes/" + datetime.today().strftime('%Y-%m-%d')  + "_tax.txt"))
-    
-    taxDoc = taxFormat(file)
+    ''' Structurizes the tax document by creating a company directory, collating all the csv files into one, 
+    applying labels to the data, summing all the data with the same labels, then outputting a document filled with 
+    the summarized categories.'''
+    companyName = inputFile("Enter folder name for company directory:")
+    company = companyFolder(companyName)
+    taxDoc = taxFormat(company.getProcessingFile())
     taxDoc.formatGen()
     taxDoc.printResults()
-    taxDoc.writeInFile()
+    taxDoc.writeInFile(company.companyPath/"polished"/f"{datetime.today().strftime('%Y-%m-%d')}_itemizedtax.txt")
 
 if __name__ == "__main__":
     main()
